@@ -1,6 +1,8 @@
 package parser
 
-import "regexp"
+import (
+	"regexp"
+)
 
 type Commit struct {
 	Type           string
@@ -38,9 +40,9 @@ func Parse(message string) (Commit, error) {
 	parsed := reg.FindStringSubmatch(message)
 
 	return Commit{
-		Type:           parsed[0],
-		Scope:          parsed[1],
-		BreakingChange: len(parsed[2]) >= 1,
-		Message:        parsed[3],
+		Type:           parsed[1],
+		Scope:          parsed[2],
+		BreakingChange: len(parsed[3]) >= 1,
+		Message:        parsed[4],
 	}, nil
 }
