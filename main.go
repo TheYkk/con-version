@@ -28,22 +28,28 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var lastTag plumbing.Hash
+	var lastTagHash plumbing.Hash
+	var lastTag string
 	err = tags.ForEach(func(reference *plumbing.Reference) error {
-		lastTag = reference.Hash()
-		log.Println(reference.Name(), reference.Hash())
+		lastTagHash = reference.Hash()
+		lastTag = reference.Name().Short()
+		log.Println(lastTag, reference.Name(), reference.Hash())
 		return nil
 	})
+
+	if len(lastTag) == 0 {
+		lastTag = "0.0.0"
+	}
 
 	if err != nil {
 		log.Fatal(err)
 	}
 	var comTime time.Time
 
-	if lastTag.IsZero() {
+	if lastTagHash.IsZero() {
 		comTime = time.Time{}
 	} else {
-		ob, err := r.CommitObject(lastTag)
+		ob, err := r.CommitObject(lastTagHash)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -63,8 +69,10 @@ func main() {
 	})
 
 	for _, commit := range commits {
-		//println(commit.Message)
-		//_ = commit
-		log.Println(parser.Parse(commit.Message))
+		cmt, err := parser.Parse(commit.Message)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("%#v\n", cmt)
 	}
 }
