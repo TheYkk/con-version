@@ -34,7 +34,7 @@ func IsBreaking(message string) (bool, error) {
 }
 
 func Parse(message string) (Commit, error) {
-	reg := regexp.MustCompile(`(docs|fix|feat|chore|style|refactor|perf|test)(?:\((.*)\))?(!?): (.*)`)
+	reg := regexp.MustCompile(`(?i)(docs|fix|feat|chore|style|refactor|perf|test)(?:\((.*)\))?(!?): (.*)`)
 	parsed := reg.FindStringSubmatch(message)
 
 	return Commit{
