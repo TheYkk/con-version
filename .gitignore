@@ -23,4 +23,6 @@
 /vendor/
 /Godeps/
 
+con-version
+
 # End of https://www.toptal.com/developers/gitignore/api/go
