@@ -11,9 +11,13 @@ type Commit struct {
 	Message        string
 }
 
+var (
+	commitRegex   = regexp.MustCompile(`(?i)(docs|fix|feat|chore|style|refactor|perf|test)(?:\((.*)\))?(!?): (.*)`)
+	breakingRegex = regexp.MustCompile(`(\n?)BREAKING( -)CHANGE:`)
+)
+
 func breaking(message string) bool {
-	reg := regexp.MustCompile(`(\n?)BREAKING( -)CHANGE:`)
-	return reg.Match([]byte(message))
+	return breakingRegex.Match([]byte(message))
 }
 
 func IsBreaking(message string) (bool, error) {
@@ -36,8 +40,7 @@ func IsBreaking(message string) (bool, error) {
 }
 
 func Parse(message string) (Commit, error) {
-	reg := regexp.MustCompile(`(?i)(docs|fix|feat|chore|style|refactor|perf|test)(?:\((.*)\))?(!?): (.*)`)
-	parsed := reg.FindStringSubmatch(message)
+	parsed := commitRegex.FindStringSubmatch(message)
 
 	return Commit{
 		Type:           parsed[1],
