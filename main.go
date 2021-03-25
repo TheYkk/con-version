@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -10,18 +11,28 @@ import (
 	"time"
 )
 
+var (
+	Version = "dev"
+)
+
 func main() {
-	path, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	r, err := git.PlainOpen(path)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	// Include file and line number on log
 	log.SetFlags(log.Lshortfile)
+	log.Println("Con-version:", Version)
+	// Get current executed dir
+	pwd, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	path := flag.String("dir", pwd, "Path of git repo")
+	flag.Parse()
+
+	r, err := git.PlainOpen(*path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// ... retrieving the HEAD reference
 	tags, err := r.Tags()
 	if err != nil {
@@ -46,9 +57,7 @@ func main() {
 	}
 	var comTime time.Time
 
-	if lastTagHash.IsZero() {
-		comTime = time.Time{}
-	} else {
+	if !lastTagHash.IsZero() {
 		ob, err := r.CommitObject(lastTagHash)
 		if err != nil {
 			log.Fatal(err)
