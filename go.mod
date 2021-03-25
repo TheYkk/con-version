@@ -2,4 +2,7 @@ module github.com/theykk/con-version
 
 go 1.16
 
-require github.com/go-git/go-git/v5 v5.2.0
+require (
+	github.com/Masterminds/semver v1.5.0 // indirect
+	github.com/go-git/go-git/v5 v5.2.0
+)
