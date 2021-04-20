@@ -23,8 +23,6 @@ jobs:
         run: go test -v ./...
 
       - name: Golangci Lint
-        uses: actions-contrib/golangci-lint@v1
+        uses: golangci/golangci-lint-action@v2.5.2
         with:
           args: run --timeout=5m
-        env:
-          GOROOT: ""
