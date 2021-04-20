@@ -15,6 +15,7 @@
 package parser
 
 import (
+	"fmt"
 	"regexp"
 )
 
@@ -26,7 +27,7 @@ type Commit struct {
 }
 
 var (
-	commitRegex   = regexp.MustCompile(`(?i)(docs|fix|feat|chore|style|refactor|perf|test)(?:\((.*)\))?(!?): (.*)`)
+	commitRegex   = regexp.MustCompile(`(?i)(docs|fix|feat|chore|ci|style|refactor|perf|test)(?:\((.*)\))?(!?): (.*)`)
 	breakingRegex = regexp.MustCompile(`(\n?)BREAKING( -)CHANGE:`)
 )
 
@@ -55,6 +56,10 @@ func IsBreaking(message string) (bool, error) {
 
 func Parse(message string) (Commit, error) {
 	parsed := commitRegex.FindStringSubmatch(message)
+
+	if len(parsed) < 4 {
+		return Commit{}, fmt.Errorf("the commit is not conventional commit %s", message)
+	}
 
 	return Commit{
 		Type:           parsed[1],

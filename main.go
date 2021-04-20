@@ -103,7 +103,7 @@ func main() {
 	for _, commit := range commits {
 		cmt, err := parser.Parse(commit.Message)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 
 		if cmt.BreakingChange {
